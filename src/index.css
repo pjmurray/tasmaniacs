@@ -99,9 +99,32 @@ z-index: 999;
     transform: rotate(360deg);
   }
 }
+
+
+
+
+@keyframes llama {
+  0%   { transform: scale(1,1)      translateY(0); }
+  10%  { transform: scale(1.0,.9)   translateY(0); }
+  30%  { transform: scale(.9,0.9)   translateY(-60px); }
+  50%  { transform: scale(1.0,0.9) translateY(0); }
+  57%  { transform: scale(1,1)      translateY(-7px); }
+  64%  { transform: scale(1,1)      translateY(0); }
+  100% { transform: scale(1,1)      translateY(0); }
+}
+
+.animate-llama {
+  animation-name: llama;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.280, 0.840, 0.420, 1);
+}
+
+
 .animate-float {
   animation: float 2s ease-in-out infinite;
 }
+
 
 .bg-black-to-white {
   background: radial-gradient(#e66465, #9198e5);
