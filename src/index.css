@@ -2,6 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Buda';
+  src: local('Buda'), url(fonts/Buda.woff) format('woff');
+  /* other formats include: 'woff2', 'truetype, 'opentype',
+                            'embedded-opentype', and 'svg' */
+}
+
+@font-face {
+  font-family: 'DancingScript';
+  src: local('DancingScript'), url(fonts/DancingScript.woff) format('woff');
+  /* other formats include: 'woff2', 'truetype, 'opentype',
+                            'embedded-opentype', and 'svg' */
+}
+
+.cursor-none {
+  cursor: none !important;
+}
+.font-buda {
+  font-family: 'Buda';
+}
+.font-dancing {
+  font-family: 'DancingScript';
+}
+
+.complete-svg {
+  stroke-dasharray: 2000;
+  animation: dash-complete 20s linear forwards;
+}
+
 .draw-svg {
   stroke-dasharray: 1000;
   stroke-dashoffset: 1000;
@@ -14,21 +43,80 @@
   }
 }
 
-.masked {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  background-image: url(gifs/fractal_1.gif);
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  -webkit-mask-image: url(svgs/tasmania.svg);
-  mask-image: url(svgs/tasmania.svg);
-  mask-position: center;
+@keyframes dash-complete {
+  to {
+    stroke-dasharray: 0;
+  }
 }
 
 .fractal {
   object-fit: cover;
   background-image: url(gifs/fractal_1.gif);
-  background-size: contain;
+  background-size: cover;
 }
+
+
+.toe {
+  position: fixed;
+  top:0;
+  left: 0;
+  cursor: none !important;
+
+  /* transform: translate(-50%, -50%);
+  -webkit-transition-duration: 100ms;
+  transition-duration: 100ms;
+  -webkit-transition-timing-function: ease-out;
+  transition-timing-function: ease-out;
+  will-change: width, height, transform, border; */
+z-index: 999;
+  pointer-events: none;
+  
+}
+.toe img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+@keyframes float {
+	0% {
+		transform: translatey(0px);
+	}
+	50% {
+		transform: translatey(-10px);
+	}
+	100% {
+		transform: translatey(0px);
+	}
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-float {
+  animation: float 2s ease-in-out infinite;
+}
+
+.bg-black-to-white {
+  background: radial-gradient(#e66465, #9198e5);
+}
+
+.fractal-flower {
+    width: 800px;
+    height: 800px;
+    background-image: url(gifs/fractal_2.gif);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+  
+    mask-image: url(svgs/flower.svg);
+    mask-size: 800px;
+    mask-repeat: no-repeat;
+    mask-position: center;
+  }
