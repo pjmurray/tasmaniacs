@@ -1,3 +1,34 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.draw-svg {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: dash 30s linear forwards;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.masked {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  background-image: url(gifs/fractal_1.gif);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-mask-image: url(svgs/tasmania.svg);
+  mask-image: url(svgs/tasmania.svg);
+  mask-position: center;
+}
+
+.fractal {
+  object-fit: cover;
+  background-image: url(gifs/fractal_1.gif);
+  background-size: contain;
+}
