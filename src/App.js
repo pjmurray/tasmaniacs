@@ -43,10 +43,10 @@ const COPY = {
   ],
   login: [
     "Welcome {{name}},",
-    "I am here to guide you",
-    "To show you the path to set yourself free.",
-    "Unfortunately sometimes to find ourselves,",
-    "We must first get lost.",
+    "I am here to guide you.",
+    "To show you a path to set yourself free.",
+    "Unfortunately to find ourselves,",
+    "Sometimes we must first get lost.",
     "What is it that you seek, my child?",
   ],
   buddha: [
@@ -66,10 +66,10 @@ const COPY = {
     ],
     [ 
       "You see, we are all seeking. Seeking something.",
-      "Whether it is inner peace,",
-      "connection with the divine",
-      "Or {{seeking}}",
-      "We are all searching, together.",
+      "Whether it is inner peace.",
+      "Connection with the divine.",
+      "Or {{seeking}}.",
+      "We are all seeking, together.",
       "",
       "However…",
       '',
@@ -88,13 +88,14 @@ const COPY = {
    [
     'In order to receive, we must first learn to give.',
     '',
-    'I have a good friend, the Deli Llama, who needs your help.',
+    'I have a good friend, the Deli Llama.',
+    'He needs your help.',
     '',
-    'The seasons have been kind to him,',
-    'and he has been met with abundance.',
+    'The seasons have been kind to him.',
+    'He has been met with abundance.',
     'But he is old and frail.',
     'He is unable to reep the benefits,',
-    'of the seeds he once sowed',
+    'of the seeds he once sowed.',
     '',
     'Will you help him?'
   ]
@@ -162,18 +163,18 @@ const Fade = ({show, duration=2000, children}) => {
   return <div className={`${show ? 'opacity-100' : 'opacity-0'} transition-opacity duration-${duration}`}>{children}</div>
 }
 
-const timeOfDay = () => {
-  var today = new Date()
-  var curHr = today.getHours()
+// const timeOfDay = () => {
+//   var today = new Date()
+//   var curHr = today.getHours()
 
-  if (curHr < 12) {
-    console.log('morning')
-  } else if (curHr < 18) {
-    console.log('afternoon')
-  } else {
-    console.log('evening')
-  }
-}
+//   if (curHr < 12) {
+//     console.log('morning')
+//   } else if (curHr < 18) {
+//     console.log('afternoon')
+//   } else {
+//     console.log('evening')
+//   }
+// }
 
 const TimedFade = ({showAt, duratin=2000, children}) => {
   const [ show, setShow] = useState(false)
@@ -193,7 +194,7 @@ const Name = ({onSuccess, store, setStore}) => {
 
   return <div className='flex flex-col space-y-4'>
     {copy.map((c, i) => <TimedFade showAt={1000 + i * 2500}><p className='text-white'>{Mustache.render(copy[i], store)}</p></TimedFade>)}
-    <TimedFade showAt={1000 + copy.length * 2500}><input type='text'  value={store.name} onChange={e => setStore({...store, name: e.target.value})} className='border-b border-dashed border-white bg-black text-white px-4 py-2' onKeyPress={handleKeyPress}/></TimedFade>
+    <TimedFade showAt={1000 + copy.length * 2500}><input type='text'  value={store.name} onChange={e => setStore({...store, name: e.target.value})} className='text-center border-b border-dashed border-white bg-black text-white px-4 py-2' onKeyPress={handleKeyPress}/></TimedFade>
 
   </div>
 }
@@ -209,7 +210,7 @@ const Login = ({onSuccess, store, setStore}) => {
   return <div className='flex flex-col space-y-4'>
     {copy.map((c, i) => <TimedFade showAt={1000 + i * 2500}><p className='text-white'>{Mustache.render(copy[i], store)}</p></TimedFade>)}
     <TimedFade showAt={1000 + copy.length * 2500}>
-    <input type='text'  value={store.seeking} onChange={e => setStore({...store, seeking: e.target.value})} className='border-b border-dashed border-white bg-black text-white px-4 py-2' onKeyPress={handleKeyPress}/>
+      <input type='text'  value={store.seeking} onChange={e => setStore({...store, seeking: e.target.value})} className='text-center border-b border-dashed border-white bg-black text-white px-4 py-2' onKeyPress={handleKeyPress}/>
       </TimedFade>
 
   </div>
@@ -239,7 +240,7 @@ const Map = ({onSuccess}) => {
     
   }
 
-  function queueNext(i) {
+  const queueNext = React.useCallback((i) => {
     setTimeout(() => {
       setShow(false)
     }, 2000)
@@ -258,11 +259,11 @@ const Map = ({onSuccess}) => {
       setShow(true)
       queueNext(i + 1)
     }, 4000)
-  }
+  }, [copy.length, onSuccess]);
   useEffect(() => {
     setShow(true)
     queueNext(1)
-  }, [])
+  }, [queueNext])
   const bgClass = BG_CLASSES[bg]
 
   return <div className={`duration-2000 font-buda transition-colors h-full w-full flex items-center justify-center p-20 text-white ${bgClass}`}>
@@ -305,12 +306,8 @@ const Story = ({onDone, store={}, onTypingDone, startDelay=2000, copy, cta}) => 
   </div>
 }
 const Buddha = ({store, onSuccess}) => {
-  const [ show, setShow ] = useState(false)
   const [ step, setStep ] = useState(1)
   const copy = COPY.buddha
-  useEffect(() => {
-    setShow(true)
-  }, [])
   return (
     <>
     {step === 1 &&  <BlackFade onDone={() => setStep(2)} from/>}
@@ -343,11 +340,7 @@ const Premap = ({onSuccess}) => {
 }
 
 const Deli = ({onSuccess}) => {
-  const [ show, setShow ] = useState(false)
   const [step, setStep] = useState(1)
-  useTimeout(() => {
-    setShow(true)
-  }, 1000)
   return (
     <>
     { step === 1 && <BlackFade onDone={() => setStep(2)} from/>}
@@ -376,7 +369,7 @@ const KumquatTree = ({onPicked, enabled,style}) => {
     if (vals.length === 5 && vals.every(v => v)){
       onPicked()
     }
-  },[clicked])
+  },[onPicked, clicked])
 
   function handleClicked (i) {
     setClicked({[i]: true, ...clicked})
@@ -400,7 +393,7 @@ const KumquatTrees = ({enabled, onPicked}) => {
     if (vals.length === 5 && vals.every(v => v)) {
       onPicked()
     }
-  },[picked])
+  },[onPicked, picked])
 
   function handlePicked (i) {
     setPicked({[i]: true, ...picked})
@@ -454,21 +447,17 @@ const BlackFade = ({duration= 2000, onDone, from=false}) => {
   const [black, setBlack] = useState(from)
   useEffect(() => {
     setBlack(!from)
-  }, [])
+  }, [from])
 
   useTimeout(() => {onDone?.()}, 2000)
   return <div className={`absolute z-50 inset-0 transition-colors duration-${duration} ${(black ? 'bg-black' : 'bg-transparent')}`}/>
 }
 
 const Announcement = () => {
-  const [width, setWidth] = useState(200)
   const [showControls, setShowContols] = useState(false)
   const [showBg, setShowBg] = useState(true)
   const [showColoredFractal, setShowColoredFractal] = useState(false)
   const [hover, setHover] = useState()
-  useEffect(() => {
-    setWidth(800)
-  }, [])
   useTimeout(() => {
     setShowContols(true)
   }, 30000)
