@@ -15,7 +15,7 @@ import tree from './imgs/tree.png'
 import spoon from './imgs/spoon.jpeg'
 import hand from './imgs/hand.jpeg'
 import sunglasses from './imgs/sunglasses.png'
-
+import { isMobile } from "react-device-detect";
 import Typist from 'react-typist';
 
 // buddha 
@@ -563,6 +563,10 @@ const submitStore = (store) => {
 function App() {
   const [store, setStore] = useState({})
   const [page, setPage ] = useState('name')
+
+  if (isMobile) {
+    return <Screen>Sorry this experience does not work on mobile</Screen>
+  }
   return (
     <>
       { page === 'name' && <Screen><Name setStore={setStore} store={store} onSuccess={() => setPage('seek')}/></Screen>}
