@@ -459,13 +459,14 @@ const BlackFade = ({duration= 2000, onDone, from=false}) => {
   return <div className={`absolute z-50 inset-0 transition-colors duration-${duration} ${(black ? 'bg-black' : 'bg-transparent')}`}/>
 }
 
-const Announcement = () => {
+const Announcement = ({onReset}) => {
   const [showControls, setShowContols] = useState(false)
   const [showBg, setShowBg] = useState(true)
   const [showColoredFractal, setShowColoredFractal] = useState(false)
   const [hover, setHover] = useState()
   useTimeout(() => {
     setShowContols(true)
+    window.localStorage.setItem('is_tasmaniac', true)
   }, 30000)
   useTimeout(() => {
     setShowColoredFractal(true)
@@ -480,10 +481,12 @@ const Announcement = () => {
   return <Screen> 
     {showControls && <>
       <ToeMouse/>
-      <div onClick={() => setHover('what')} className='absolute z-50 top-0 left-0 p-20 text-2l'>What</div>
-      <div onClick={() => setHover('when')} className='absolute z-50 top-0 right-0 p-20 text-2l'>When</div>
-      <div onClick={() => setHover('theme')} className='absolute z-50 bottom-0 left-0 p-20 text-2l'>Theme</div>
-      <div onClick={() => setHover('sign_up')} className='absolute bottom-0 right-0 p-20 text-2l'>Interested?</div>
+      <div onClick={() => setHover('what')} className='absolute z-50 top-0 left-0 p-20 text-2xl'>What</div>
+      <div onClick={() => setHover('when')} className='absolute z-50 top-0 right-0 p-20 text-2xl'>When</div>
+      <div onClick={() => setHover('theme')} className='absolute z-50 bottom-0 left-0 p-20 text-2xl'>Theme</div>
+      <div onClick={() => setHover('sign_up')} className='absolute bottom-0 right-0 p-20 text-2xl'>Interested?</div>
+      <div onClick={() => onReset()} className='absolute bottom-0 left-0 right-0 mx-23 p-10 text-base'>RESET</div>
+
       </>
 }
     <div className='relative z-50'>
@@ -565,7 +568,11 @@ const submitStore = (store) => {
 
 function App() {
   const [store, setStore] = useState({})
-  const [page, setPage ] = useState('name')
+  const [page, setPage ] = useState(window.localStorage.getItem('is_tasmaniac') ? 'info' : 'name')
+  function handleReset () {
+    setPage('name')
+    // window.localStorage.removeItem('is_tasmanic')
+  }
 
   if (isMobile) {
     return <Screen>Sorry this experience does not work on mobile</Screen>
@@ -582,7 +589,7 @@ function App() {
       { page === 'game' && <Screen className='bg-white text-black'><Game onSuccess={() => setPage('premap')}/></Screen>}
       { page === 'premap' && <Screen className='bg-white text-black'><Premap onSuccess={() => setPage('map')}/></Screen>}
       { page === 'map' && <Map onSuccess={() => setPage('info')}/>}
-      { page === 'info' && <Announcement onReset={() => setPage('name')}/>}
+      { page === 'info' && <Announcement onReset={handleReset}/>}
       
     </>
   );
