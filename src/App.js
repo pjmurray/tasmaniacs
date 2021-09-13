@@ -43,7 +43,7 @@ const COPY = {
   ],
   login: [
     "Welcome {{name}},",
-    "I am here to guide you…",
+    "I am here to guide you",
     "To show you the path to set yourself free.",
     "Unfortunately sometimes to find ourselves,",
     "We must first get lost.",
@@ -141,8 +141,8 @@ const COPY = {
   "…beyond the horizon…",
   "…where the water runs pure…",
   "…the air blows fresh…",
-  "…and the only things that's missing…",
-  "Is you"
+  "…and the only thing that's missing…",
+  "Is you."
   ], 
    [
     "You're being called…",
@@ -217,15 +217,14 @@ const Login = ({onSuccess, store, setStore}) => {
 
 
 
-const BG_CLASSES = ['bg-black','bg-white', 'bg-black', 'fractal']
+const BG_CLASSES = ['bg-black','fractal']
+// const BG_CLASSES = ['bg-black','bg-white', 'bg-black', 'fractal']
 const Map = ({onSuccess}) => {
   const [show, setShow] = useState(false);
   const [text, setText] = useState(0);
   const [ bg, setBg] = useState(0)
 
-  const [copyI, setCopyI] = useState(0) 
-  
-  const copy = COPY.map[copyI]
+  const copy = COPY.map[0]
   // useTimeout(() => {setText(COPY.intro[0])}, 1000)
 
   function handleClick () {
@@ -246,21 +245,11 @@ const Map = ({onSuccess}) => {
     }, 2000)
 
     if (i >= copy.length) {
-      if (copyI === 0) {
-        setBg(1)
+      console.log('yep')
         setTimeout(() => {
-          setBg(2)
-          setText(0)
-          setCopyI(1)
-          setShow(true)
-          queueNext(1)
-        }, 10000)
-      } else {
-        setBg(3)
-        setTimeout(() => {
-          onSuccess()
+          setBg(1)
+          setTimeout(onSuccess, 2000)
         }, 1000)
-      }
       return
     } 
 
@@ -276,12 +265,12 @@ const Map = ({onSuccess}) => {
   }, [])
   const bgClass = BG_CLASSES[bg]
 
-  return <div className={`duration-${(copyI + 1) * 10000} font-buda transition-colors h-full w-full flex items-center justify-center p-20 text-white ${bgClass}`}>
+  return <div className={`duration-2000 font-buda transition-colors h-full w-full flex items-center justify-center p-20 text-white ${bgClass}`}>
       <div className='w-full max-w-2xl relative z-20' onClick={handleClick}>
         <div className='absolute inset-0  flex flex-row items-center justify-center text-xl'>
           <Fade show={show}>{copy[text]}</Fade>
           </div>
-          <Tasmania className={'draw-svg stroke-current  ' + (bgClass === 'bg-black' && bg > 0 ? 'text-black' : 'text-white') }/>
+          <Tasmania className={'draw-svg stroke-current ' + (bgClass === 'bg-black' && bg > 0 ? 'text-black' : 'text-white') }/>
       </div>
     </div>
 }
@@ -467,51 +456,34 @@ const BlackFade = ({duration= 2000, onDone, from=false}) => {
     setBlack(!from)
   }, [])
 
-  useTimeout(() => {onDone()}, 2000)
+  useTimeout(() => {onDone?.()}, 2000)
   return <div className={`absolute z-50 inset-0 transition-colors duration-${duration} ${(black ? 'bg-black' : 'bg-transparent')}`}/>
 }
 
 const Announcement = () => {
   const [width, setWidth] = useState(200)
-  const [show, setShow] = useState([])
+  const [showControls, setShowContols] = useState(false)
+  const [showBg, setShowBg] = useState(true)
+  const [showColoredFractal, setShowColoredFractal] = useState(false)
   const [hover, setHover] = useState()
   useEffect(() => {
     setWidth(800)
   }, [])
   useTimeout(() => {
-    const showDupe = [...show] 
-    showDupe[0] = true
-    setShow(showDupe)
-  }, 18000)
-  useTimeout(() => {
-    const showDupe = [...show] 
-    showDupe[1] = true
-    setShow(showDupe)
-  }, 21000)
-  useTimeout(() => {
-    const showDupe = [...show] 
-    showDupe[2] = true
-    setShow(showDupe)
-  }, 24000)
-  useTimeout(() => {
-    const showDupe = [...show] 
-    showDupe[3] = true
-    setShow(showDupe)
-  }, 27000)
-  useTimeout(() => {
-    const showDupe = [...show] 
-    showDupe[4] = true
-    setShow(showDupe)
+    setShowContols(true)
   }, 30000)
+  useTimeout(() => {
+    setShowColoredFractal(true)
+  }, 24000)
 
   const inner = <>
-    <Fade show={show[1]} duration="1500"><p>PJ Murray presents</p></Fade>
-    <Fade show={show[2]} duration="1500"><h1 className='text-7xl mb-2 -mt-2 font-dancing'>tasmaniacs</h1></Fade>
-    <Fade show={show[3]} duration="1500"><p className='text-3xl'>the path to enlightment</p></Fade>
+    <TimedFade showAt={21000} duration="1500"><p>PJ Murray presents</p></TimedFade>
+    <TimedFade showAt={24000} duration="1500"><h1 className='text-7xl mb-2 -mt-2 font-dancing'>tasmaniacs</h1></TimedFade>
+    <TimedFade showAt={27000} duration="1500"><p className='text-3xl'>the path to enlightment</p></TimedFade>
   </>
 
   return <Screen> 
-    {show[4] && <>
+    {showControls && <>
       <ToeMouse/>
       <div onClick={() => setHover('what')} className='absolute z-50 top-0 left-0 p-20 text-2l'>What</div>
       <div onClick={() => setHover('when')} className='absolute z-50 top-0 right-0 p-20 text-2l'>When</div>
@@ -527,7 +499,7 @@ const Announcement = () => {
         <p>to</p>
         <p className='text-3xl'>Wednesday Dec 22nd</p>
         <p className='mt-4'>Very much COVID dependant</p>
-        <p>Currently limited on huts (10 max)</p><p>and flights (none)</p><p>may push it out to 2022</p>
+        <p>Currently limited on huts (10 max)</p><p>and flights (none)</p><p>so may push it out to 2022</p>
       </div>}
       {hover === 'what' && <div className='flex flex-col w-96'>
       <p className='text-2xl font-dancing mb-4'>What</p>
@@ -556,18 +528,19 @@ const Announcement = () => {
       </div>}
     </div>
     <div className='z-20 absolute flex items-center justify-center'>
-    <Fade show={show[0]} duration="4000">
+    <TimedFade showAt={18000} duration="4000">
         <div className='rounded-full w-96 h-96 bg-black'/>
-    </Fade>
+    </TimedFade>
     </div>
-    <div className='absolute duration-20000 transition-all' onClick={() => setHover(null)} style={{width: width}}><div className='animate-spin-slow w-full'>
+    <div className={`absolute duration-20000 transform transition-transform ${showBg ? 'scale-0' : 'scale-100'}`} onClick={() => setHover(null)} style={{width: 800}}><div className='animate-spin-slow w-full'>
       { 
-      show[2] ? 
+      showColoredFractal ? 
       <div className='fractal-flower'/>
       : <Flower className='w-full complete-svg stroke-current text-white' />
       }
       
       </div></div>
+      { showBg && <BlackFade duartion={4000} from onDone={() => setShowBg(false)}/>}
   </Screen>
 }
 
@@ -579,7 +552,7 @@ return (<div className={`${className} h-full w-full font-buda text-xl flex items
 }
 function App() {
   const [store, setStore] = useState({})
-  const [page, setPage ] = useState('map')
+  const [page, setPage ] = useState('name')
   return (
     <>
       { page === 'name' && <Screen><Name setStore={setStore} store={store} onSuccess={() => setPage('seek')}/></Screen>}

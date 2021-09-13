@@ -10,8 +10,8 @@ module.exports = {
         '1500': '1500ms',
         '2000': '2000ms',
         '4000': '4000ms',
-        '10000': '10000ms',
-        '20000': '20000ms'
+        '10000': '10s',
+        '20000': '20s'
        },
        animation: {
         'spin-slow': 'spin 10s linear infinite'
