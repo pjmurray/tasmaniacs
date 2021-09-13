@@ -4,6 +4,8 @@ import Mustache from 'mustache';
 import useTimeout from './hooks/useTimeout';
 import { ReactComponent as Tasmania }  from './svgs/tasmania.svg';
 import { ReactComponent as Flower }  from './svgs/flower.svg';
+import  fractal1  from './gifs/fractal_1.gif';
+import fractal2  from './gifs/fractal_2.gif';
 import useMousePosition from './hooks/useMousePosition'
 import mouse from './imgs/mouse.png'
 import mouseClicked from './imgs/clicked.png'
@@ -12,7 +14,9 @@ import deli from './imgs/deli.png'
 import llama from './imgs/llama2.png'
 import kumquat from './imgs/kum.png'
 import tree from './imgs/tree.png'
+import brick from './imgs/brick.png'
 import spoon from './imgs/spoon.jpeg'
+import funnel from './imgs/funnel.jpeg'
 import hand from './imgs/hand.jpeg'
 import sunglasses from './imgs/sunglasses.png'
 import { isMobile } from "react-device-detect";
@@ -56,7 +60,7 @@ const COPY = {
       "",
       "You are weary, and have come far.",
       "These times have been tough and unfair.",
-      "I can see that your hurting.",
+      "I can see that you're hurting.",
       "",
       "But it's okay.",
       "For I am here to help.",
@@ -79,59 +83,89 @@ const COPY = {
       '',
       "Many who have taken,",
       "but few who have given.",
-      "",
-      "Before I show you the path forward,",
-      "You must surrender yourself to service.",
     ],
    [
-    'In order to receive, we must first learn to give.',
+    "Before I show you the path forward,",
+    "You must surrender yourself to service.",
+    'In order to receive, you must first learn to give.',
     '',
     'I have a good friend, the Deli Llama.',
     'He needs your help.',
     '',
-    'The seasons have been kind to him.',
+    'This season has been kind to him.',
     'He has been met with abundance.',
     'But he is old and frail.',
-    'He is unable to reep the benefits,',
+    'He is unable to reap the benefits,',
     'of the seeds he once sowed.',
     '',
     'Will you help him?'
   ]
   ],
-  deli_1: [
-    "Welcome child, to my Deli!",
-    "Your offer of help is very kind.",
-    '',
-    "This summer has been good to me,",
-    "and my farm has bore many fruits.",
-    "But I dont have the means to harvest.",
-    "Can you please help me?",
+  deli: [
+    [
+      "Ah G'day mate, and welcome to my Deli!",
+      "What can I do ya for?",
+      "Got some great cold cuts here if you're interested?",
+      "Bit of D'affinois if that's your thing?",
+    ],
+    [
+      "Oh bloody grouse! What a bloody legendbag!",
+      "I could do with a set of hands round here.",
+      "These hooves only get me so far.",
+      '',
+      "Ya see I've had a bloody ripper of a summer…",
+      "Heaps of fruit practically falling off me trees.",
+      "",
+      "But I'll tell ya, takes me fricken ages to pick 'em.",
+      "You know - being a Llama and all.",
+      '',
+      'Reckon you could give us a hand?'
+    ],
+    [
+    "Ah too easy!",
+    "Come with me mate…"
+    ]
   ],
-  deli_2: [
-    "Thank you!",
-    "Come with me...."
-  ],
-  game_1: [
-    'Welcome to my Kumquat farm!',
-    'I need you to help me pick my fruit.',
+  game: [
+    [
+    'Welcome to the farm!',
+    'See what I mean!?',
+    'More Kumquats that I know to do with.',
+    'I really need your help here mate!',
+    ],
+  [
+    'Toooooooooooooooo easy!',
+    'Before we get into it - just a word of warning.',
+    'These fruit here are my babies.',
+    'Ya hear me?',
     '',
-    'But my fruit are gentle,',
-    'and must be handled with care.',
+    'So ya gotta be careful with em.',
     '',
-    'Please select an appropriate tool…',
+    'With that in mind - grab ya self a picking tool.',
   ],
-  game_2: [
+   [
     "Good luck!",
     "Please harvest my fruit carefully for me.",
   ],
-  game_3: [
-    "Amazing - now I can get back to work",
-    "Thank you kind wanderer.",
+  ],
+  game_remarks: [
+    "Careful there mate! Look after em!",
+    "Steady toes now.... Steady toes...",
+    "Looking good. Great action."
+  ],
+  game_end: [
+    "Amazing - now I can get back to work.",
+    "Good on ya mate!",
   ],
   premap: [
       'Thank you for helping my good friend!',
+      'You are a noble person and a fine Kumqaut picker.',
+      '',
       "You have proven you are ready.",
       "Ready to be shown the path of truth.",
+      '',
+      'The answers you seek are near.',
+      'Lend me your ear…'
   ],
   map: [
   [
@@ -331,21 +365,22 @@ const Premap = ({onSuccess}) => {
     <img src={buddha2} alt="buddha" className='animate-float' width="400"/>
     </Fade>
     <div className='w-1/2'>
-    { step === 2 &&  <Story copy={copy} cta='Please get on with it' onDone={() => setStep(3)}/>}
+    { step === 2 &&  <Story copy={copy} cta='Get on with it' onDone={() => setStep(3)}/>}
     </div>
     </>)
 }
 
 const Deli = ({onSuccess}) => {
   const [step, setStep] = useState(1)
+  const copy = COPY.deli
   return (
     <>
     { step === 1 && <BlackFade onDone={() => setStep(2)} from/>}
-    { step === 4 && <BlackFade onDone={onSuccess}/>}
-    <div className='w-1/4'></div>
-    <div className='w-1/4'>
-      {step === 2 && <Story copy={COPY.deli_1} startDelay={10000} onDone={() => setStep(3)} cta="Yes"/>}
-      { step === 3 && <Story copy={COPY.deli_2} onTypingDone={() => setStep(4)}/> }
+    { step === 5 && <BlackFade onDone={onSuccess}/>}
+    <div className='w-1/2'>
+      {step === 2 && <Story copy={copy[0]} startDelay={10000} onDone={() => setStep(3)} cta="I've actually come to help."/>}
+      { step === 3 && <Story copy={copy[1]} onDone={() => setStep(4)} cta="Ah, sure!"/> }
+      { step === 4 && <Story copy={copy[2]} onTypingDone={() => setStep(5)}/> }
     </div>
     <div className='w-1/2 relative flex flex-row items-center justify-center'>
     <img src={llama} alt="deli" className='animate-llama transition-all relative duration-10000' width={300} style={{left: step > 1 ? 0: 600}}/> 
@@ -409,41 +444,50 @@ const KumquatTrees = ({enabled, onPicked}) => {
 const Game = ({onSuccess}) => {
   const [step, setStep] = useState(0)
   const [ message, setMessage] = useState()
-  const canPlay = step > 2
+  const canPlay = step > 3;
+  const copy = COPY.game;
+  function next() {
+    setStep(step + 1)
+  }
   return <div>
   {canPlay && <ToeMouse/>}
   { step === 0 && <BlackFade onDone={() =>  setStep(1)} from/>}
-  { step === 5 && <BlackFade onDone={onSuccess}/>}
+  { step === 6 && <BlackFade onDone={onSuccess}/>}
 
   <div className='flex flex-row space-y-4'>
   { step === 0 &&  <div class='w-96 mt-10'/>}
   { step === 1 &&  <div class='w-96 mt-10'>
-    <Story copy={COPY.game_1} cta="Okay" onDone={() => setStep(2)}/>
+    <Story copy={copy[0]} cta="Okay" onDone={next}/>
   </div>}
-  { step === 2 &&  <div className='w-96 mt-10 mr-10 '> <div className='grid grid-cols-2 gap-y-5'>
+  { step === 2 &&  <div class='w-96 mt-10'>
+    <Story copy={copy[1]} cta="Okay" onDone={next}/>
+  </div>}
+  { step === 3 &&  <div className='w-96 mt-10 mr-10 '> <div className='grid grid-cols-2 gap-y-5'>
     <img src={spoon} alt='spoon' className='h-24 mx-auto' onClick={() => setMessage('No.... that spoon is far to small to pick a kumquat with!')}/>
-    <img src={sunglasses} alt='glasses' className='h-24 mx-auto' onClick={() => setMessage('Sunglasses might look good on a wig, but they are no way to pick a kumquat!')}/>
     <img src={hand} alt='hand' className='w-24 mx-auto' onClick={() => setMessage('Hmmm, that looks like fun... but maybe for later in the evening?')}/>
+    <img src={sunglasses} alt='glasses' className='h-24 mx-auto' onClick={() => setMessage('Sunglasses might look good on a wig, but they are no way to pick a kumquat!')}/>
     <img src={mouse} alt='toe' className='h-24 mx-auto' onClick={() => setMessage('Ahh, good idea! I toetally support using your feet.')}/>
+    <img src={brick} alt='brick' className='h-24 mx-auto' onClick={() => setMessage("You're bloody joking me right? What the fuck are you gonna do with that?")}/>
+    <img src={funnel} alt='funnel' className='h-24 mx-auto' onClick={() => setMessage('Nah wouldnt be touching that one mate.')}/>
 
     </div>
   </div>}
-  { step === 3 &&  <div className='w-96 mt-10'>
-    <Story startDelay={0} copy={COPY.game_2}/>
-  </div>}
   { step === 4 &&  <div className='w-96 mt-10'>
-    <Story startDelay={0} copy={COPY.game_3} onTypingDone={() => setStep(5)}/>
+    <Story startDelay={0} copy={copy[2]}/>
+  </div>}
+  { step === 5 &&  <div className='w-96 mt-10'>
+    <Story startDelay={0} copy={COPY.game_end} onTypingDone={next}/>
   </div>}
     <img src={llama} alt='llama' width={200} className='animate-llama' /> 
   </div>
-  { step === 2 && <div className='w-96 mx-auto relative'>
-    <div class='absolute'>
+  { step === 3 && <div className='w-96 mx-auto relative'>
+    <div class='absolute pt-2'>
     {message && <p className=''>{message}</p>}
-      {message && message.includes('feet') && <Button onClick={() => setStep(3)}>Start picking</Button>}
+      {message && message.includes('feet') && <Button onClick={next}>Start picking</Button>}
       </div>
       </div>
 }
-    <KumquatTrees enabled={canPlay} onPicked={() => setStep(4)}/>
+    <KumquatTrees enabled={canPlay} onPicked={next}/>
   </div>
 }
 
@@ -569,7 +613,6 @@ function App() {
   const [page, setPage ] = useState(window.localStorage.getItem('is_tasmaniac') ? 'info' : 'name')
   function handleReset () {
     setPage('name')
-    // window.localStorage.removeItem('is_tasmanic')
   }
 
   if (isMobile) {
@@ -588,7 +631,13 @@ function App() {
       { page === 'premap' && <Screen className='bg-white text-black'><Premap onSuccess={() => setPage('map')}/></Screen>}
       { page === 'map' && <Map onSuccess={() => setPage('info')}/>}
       { page === 'info' && <Announcement onReset={handleReset}/>}
-      
+      <div className='hidden'>
+        <img src={llama}/>
+        <img src={deli}/>
+        <img src={fractal1}/>
+        <img src={fractal2}/>
+        <img src={buddha2}/>
+      </div>
     </>
   );
 }
