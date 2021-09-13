@@ -105,6 +105,7 @@ const COPY = {
     [
       "Ah G'day mate, and welcome to my Deli!",
       "What can I do ya for?",
+      '',
       "Got some great cold cuts here if you're interested?",
       "Bit of D'affinois if that's your thing?",
     ],
@@ -115,11 +116,22 @@ const COPY = {
       '',
       "Ya see I've had a bloody ripper of a summer…",
       "Heaps of fruit practically falling off me trees.",
-      "",
-      "But I'll tell ya, takes me fricken ages to pick 'em.",
-      "You know - being a Llama and all.",
       '',
-      'Reckon you could give us a hand?'
+      "So many coconuts! And plenty of mangos!",
+      "It's been great!",
+    ],
+    [
+      "But I'll tell ya mate, I have got one problem.",
+      "There's this one fruit that's been giving me a bit of bother.",
+      "",
+      "Tiny little bastards...",
+      "Little citrus fuckers…",
+      "They've been taking me ages to pick!",
+      "",
+      "I know you wouldn't think it…",
+      "But sometimes being a Llama can be tough.",
+      '',
+      'Reckon you could help a fella out?'
     ],
     [
     "Ah too easy!",
@@ -130,7 +142,8 @@ const COPY = {
     [
     'Welcome to the farm!',
     'See what I mean!?',
-    'More Kumquats that I know to do with.',
+    'More Kumquats than I know to do with.',
+    "",
     'I really need your help here mate!',
     ],
   [
@@ -373,14 +386,18 @@ const Premap = ({onSuccess}) => {
 const Deli = ({onSuccess}) => {
   const [step, setStep] = useState(1)
   const copy = COPY.deli
+  function next() {
+    setStep(step + 1)
+  }
   return (
     <>
     { step === 1 && <BlackFade onDone={() => setStep(2)} from/>}
-    { step === 5 && <BlackFade onDone={onSuccess}/>}
+    { step === 6 && <BlackFade onDone={onSuccess}/>}
     <div className='w-1/2'>
-      {step === 2 && <Story copy={copy[0]} startDelay={10000} onDone={() => setStep(3)} cta="I've actually come to help."/>}
-      { step === 3 && <Story copy={copy[1]} onDone={() => setStep(4)} cta="Ah, sure!"/> }
-      { step === 4 && <Story copy={copy[2]} onTypingDone={() => setStep(5)}/> }
+      {step === 2 && <Story copy={copy[0]} startDelay={10000} onDone={next} cta="I've actually come to help."/>}
+      { step === 3 && <Story copy={copy[1]} onDone={next} cta="Sounds it…"/> }
+      { step === 4 && <Story copy={copy[2]} onDone={next} cta="Ah, sure thing!"/> }
+      { step === 5 && <Story copy={copy[3]} onTypingDone={next}/> }
     </div>
     <div className='w-1/2 relative flex flex-row items-center justify-center'>
     <img src={llama} alt="deli" className='animate-llama transition-all relative duration-10000' width={300} style={{left: step > 1 ? 0: 600}}/> 
@@ -451,7 +468,7 @@ const Game = ({onSuccess}) => {
   }
   return <div>
   {canPlay && <ToeMouse/>}
-  { step === 0 && <BlackFade onDone={() =>  setStep(1)} from/>}
+  { step === 0 && <BlackFade duration={4000} onDone={() =>  setStep(1)} from/>}
   { step === 6 && <BlackFade onDone={onSuccess}/>}
 
   <div className='flex flex-row space-y-4'>
@@ -675,6 +692,7 @@ const submitStore = (store) => {
 function App() {
   const [store, setStore] = useState({})
   const [page, setPage ] = useState(window.localStorage.getItem('is_tasmaniac') ? 'details' : 'name')
+  // const [page, setPage ] = useState('deli')
   function handleReset () {
     setPage('name')
     window.localStorage.removeItem('is_tasmaniac')
