@@ -53,6 +53,7 @@
   object-fit: cover;
   background-image: url(gifs/fractal_1.gif);
   background-size: cover;
+  background-position: center center;
 }
 
 

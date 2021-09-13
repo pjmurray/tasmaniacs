@@ -240,18 +240,18 @@ const Map = ({onSuccess}) => {
   }
 
   const queueNext = React.useCallback((i) => {
+
+    if (i >= copy.length) {
+      setBg(1)
+      setTimeout(onSuccess, 3000)
+      return
+    } 
+
     setTimeout(() => {
       setShow(false)
     }, 2000)
 
-    if (i >= copy.length) {
-      console.log('yep')
-        setTimeout(() => {
-          setBg(1)
-          setTimeout(onSuccess, 2000)
-        }, 1000)
-      return
-    } 
+    
 
     setTimeout(() => {
       setText(i)
@@ -267,7 +267,7 @@ const Map = ({onSuccess}) => {
 
   return <div className={`duration-2000 font-buda transition-colors h-full w-full flex items-center justify-center p-20 text-white ${bgClass}`}>
       <div className='w-full max-w-2xl relative z-20' onClick={handleClick}>
-        <div className='absolute inset-0  flex flex-row items-center justify-center text-xl'>
+        <div className={`absolute inset-0  flex flex-row items-center justify-center ${text === copy.length - 1 ? 'text-3xl' : 'text-2xl'}`}>
           <Fade show={show}>{copy[text]}</Fade>
           </div>
           <Tasmania className={'draw-svg stroke-current ' + (bgClass === 'bg-black' && bg > 0 ? 'text-black' : 'text-white') }/>
