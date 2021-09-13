@@ -582,6 +582,70 @@ const Announcement = ({onReset}) => {
       { showBg && <BlackFade duartion={4000} from onDone={() => setShowBg(false)}/>}
   </Screen>
 }
+const Details = ({onReset}) => {
+  const [hover, setHover] = useState()
+
+  const inner = <>
+    <div><p>PJ Murray presents</p></div>
+    <div><h1 className='text-7xl mb-2 -mt-2 font-dancing'>tasmaniacs</h1></div>
+    <div><p className='text-3xl'>the path to enlightment</p></div>
+  </>
+
+  return <Screen> 
+    <>
+      <ToeMouse/>
+      <div onClick={() => setHover('what')} className='absolute z-50 top-0 left-0 p-20 text-2xl'>What</div>
+      <div onClick={() => setHover('when')} className='absolute z-50 top-0 right-0 p-20 text-2xl'>When</div>
+      <div onClick={() => setHover('theme')} className='absolute z-50 bottom-0 left-0 p-20 text-2xl'>Theme</div>
+      <div onClick={() => setHover('sign_up')} className='absolute bottom-0 right-0 p-20 text-2xl'>Interested?</div>
+      <div onClick={() => onReset()} className='absolute bottom-0 left-0 right-0 mx-23 pb-10 text-base'>RESET</div>
+
+      </>
+    <div className='relative z-50'>
+      {!hover && inner}
+      {hover === 'when' &&  <div className='flex flex-col w-96'>
+      <p className='text-2xl font-dancing mb-4'>When</p>
+        <p className='text-3xl'>Friday Dec 17th</p>
+        <p>to</p>
+        <p className='text-3xl'>Wednesday Dec 22nd</p>
+        <p className='mt-4'>Very much COVID dependant</p>
+        <p>Currently limited on huts (10 max)</p><p>and flights (none)</p><p>so may push it out to 2022</p>
+      </div>}
+      {hover === 'what' && <div className='flex flex-col w-96'>
+      <p className='text-2xl font-dancing mb-4'>What</p>
+      <p className='text-3xl'>2 nights in the wilderness</p>
+        <p>Connect with nature, each other, and oneself </p>
+        <p>Hiking, camping, day tripping</p>
+      <p className='text-3xl mt-6'>2 nights in Hobart</p>
+        <p>Decompression and debachuery</p>
+        <p>Mona day trip</p>
+      </div>}
+      {hover === 'theme' && <div className='flex flex-col w-96'>
+      <p className='text-2xl font-dancing mb-4'>Theme</p>
+      <p className='text-3xl mb-2'>The Path to Enlightenment</p>
+        <p>Humble monks in orange robes</p>
+        <p>The practice of mystical rituals</p>
+        <p>Sacred symbols and ancient wisdom</p>
+        <p>Connection with the divine</p>
+      </div>}
+      {hover === 'sign_up' && <div className='flex flex-col w-96'>
+      <p className='text-2xl font-dancing mb-4'>Interested?</p>
+        <p>Currently feeling out interest.</p>
+        <p>Everything is very much tentative at this stage.</p>
+        <p>More information to follow as we get clarity.</p>
+        <p>If you're keen, let me know :)</p>
+      </div>}
+    </div>
+    <div className='z-20 absolute flex items-center justify-center'>
+    <div>
+        <div className='rounded-full w-96 h-96 bg-black'/>
+        </div>
+    </div>
+    <div className={`absolute duration-20000 transform transition-transform scale-100`} onClick={() => setHover(null)} style={{width: 800}}><div className='animate-spin-slow w-full'>
+      <div className='fractal-flower'/>
+      </div></div>
+  </Screen>
+}
 
 const Screen = ({className="bg-black text-white", children}) => {
 return (<div className={`${className} h-full w-full font-buda text-xl flex items-center justify-center text-center`}>
@@ -610,9 +674,10 @@ const submitStore = (store) => {
 
 function App() {
   const [store, setStore] = useState({})
-  const [page, setPage ] = useState(window.localStorage.getItem('is_tasmaniac') ? 'info' : 'name')
+  const [page, setPage ] = useState(window.localStorage.getItem('is_tasmaniac') ? 'details' : 'name')
   function handleReset () {
     setPage('name')
+    window.localStorage.removeItem('is_tasmaniac')
   }
 
   if (isMobile) {
@@ -631,6 +696,7 @@ function App() {
       { page === 'premap' && <Screen className='bg-white text-black'><Premap onSuccess={() => setPage('map')}/></Screen>}
       { page === 'map' && <Map onSuccess={() => setPage('info')}/>}
       { page === 'info' && <Announcement onReset={handleReset}/>}
+      { page === 'details' && <Details onReset={handleReset}/>}
       <div className='hidden'>
         <img alt='preload' src={llama}/>
         <img alt='preload' src={deli}/>
