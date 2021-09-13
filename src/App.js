@@ -1,21 +1,19 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-// import { Transition } from '@headlessui/react'
+import Mustache from 'mustache';
 import useTimeout from './hooks/useTimeout';
 import { ReactComponent as Tasmania }  from './svgs/tasmania.svg';
 import { ReactComponent as Flower }  from './svgs/flower.svg';
-// import fractal from './gifs/fractal_1.gif'
-// import ReactVivus from 'react-vivus';
 import useMousePosition from './hooks/useMousePosition'
 import mouse from './imgs/mouse.png'
 import mouseClicked from './imgs/clicked.png'
-import buddha from './imgs/buddha.png'
 import buddha2 from './imgs/buddha2.png'
 import deli from './imgs/deli.png'
-import llama from './imgs/llama.png'
+import llama from './imgs/llama2.png'
 import kumquat from './imgs/kum.png'
 import tree from './imgs/tree.png'
 import spoon from './imgs/spoon.jpeg'
+import hand from './imgs/hand.jpeg'
 import sunglasses from './imgs/sunglasses.png'
 
 import Typist from 'react-typist';
@@ -38,50 +36,63 @@ import Typist from 'react-typist';
 
 
 const COPY = {
+  name: [
+    "Our journey has just begun.",
+    "Let us wander these lands together.",
+    "By what name do you go by?"
+  ],
   login: [
-    "To find ourselves, we must first get lost.",
-    "What is it you seek, my child?",
+    "Welcome {{name}},",
+    "I am here to guide you…",
+    "To show you the path to set yourself free.",
+    "Unfortunately sometimes to find ourselves,",
+    "We must first get lost.",
+    "What is it that you seek, my child?",
   ],
   buddha: [
     [
-      "My young disciple",
+      "My young disciple.",
       "Welcome.",
+      "I've been waiting many years for you.",
       "",
       "You are weary, and have come far.",
-      "These times have been tough, and unfair.",
-      "I can see your hurting",
+      "These times have been tough and unfair.",
+      "I can see that your hurting.",
       "",
       "",
+      "But it's okay.",
       "But I am here to help.",
       "I am here to set you free.",
     ],
     [ 
-      "You see, We are all seeking something",
+      "You see, we are all seeking. Seeking something.",
+      "Whether it is inner peace,",
+      "connection with the divine",
+      "Or {{seeking}}",
+      "We are all searching, together.",
       "",
       "However…",
       '',
-      "I have met many who seek",
-      "But few who have found",
+      "I have met many who seek,",
+      "but few who have found.",
       '',
-      "Many who want",
-      "But few who need",
+      "Many who have wanted,",
+      "but few who have needed.",
       '',
-      "Many who take",
-      "But few who give",
+      "Many who have taken,",
+      "but few who have given.",
       "",
       "Before I show you the path forward,",
       "You must surrender yourself to service.",
-      "",
-      "Are you ready?"
     ],
    [
     'In order to receive, we must first learn to give.',
     '',
-    'I have a good friend, the Deli Llama, who needs your help',
+    'I have a good friend, the Deli Llama, who needs your help.',
     '',
-    'The seasons have been kind to him',
-    'And he has been met with abundance',
-    'But he is old and frail',
+    'The seasons have been kind to him,',
+    'and he has been met with abundance.',
+    'But he is old and frail.',
     'He is unable to reep the benefits,',
     'of the seeds he once sowed',
     '',
@@ -89,7 +100,7 @@ const COPY = {
   ]
   ],
   deli_1: [
-    "Welcome child, to my Deli",
+    "Welcome child, to my Deli!",
     "Your offer of help is very kind.",
     '',
     '',
@@ -103,38 +114,44 @@ const COPY = {
     "Come with me...."
   ],
   game_1: [
-    'Welcome to my Kumquat farm',
-    'I need you to help me pick my fruit',
+    'Welcome to my Kumquat farm!',
+    'I need you to help me pick my fruit.',
+    '',
     'But my fruit are gentle,',
     'and must be handled with care.',
+    '',
     'Please select an appropriate tool…',
   ],
   game_2: [
-    "Yes, that will do nicely!",
-    "Please harvest my fruit for me",
+    "Good luck!",
+    "Please harvest my fruit carefully for me.",
   ],
   game_3: [
     "Amazing - now I can get back to work",
     "Thank you kind wanderer.",
   ],
   premap: [
-      'Thank you for helping my good friend',
-      "You have proven you are ready",
-      "Ready to be shown the path",
+      'Thank you for helping my good friend!',
+      "You have proven you are ready.",
+      "Ready to be shown the path of truth.",
   ],
   map: [
+  [
   "They speak of a place…",
   "…beyond the horizon…",
   "…where the water runs pure…",
   "…the air blows fresh…",
   "…and the only things that's missing…",
   "Is you"
-  ],
-  map_2: [
-    "You're being called",
-    "To join on an adventure",
-    "On an journey with no destination",
-    "A beginning with no end",
+  ], 
+   [
+    "You're being called…",
+    "…to join in on an adventure…",
+    "…a journey with no destination…",
+    "…a beginning with no end…",
+    "…a moment in time…",
+    "…that will last forver."
+  ]
   ],
   announcement: [
     
@@ -158,39 +175,57 @@ const timeOfDay = () => {
   }
 }
 
-const Login = ({onSuccess}) => {
-  const [ show, setShow] = useState([])
-  const [password, setPassword] = useState()
+const TimedFade = ({showAt, duratin=2000, children}) => {
+  const [ show, setShow] = useState(false)
+  useTimeout(() => setShow(true), showAt)
 
-  useTimeout(() => setShow(show.concat(['text1'])), 1000)
-  useTimeout(() => setShow(show.concat(['text2'])), 5000)
-  useTimeout(() => setShow(show.concat(['input'])), 7000)
+  return <Fade show={show}>{children}</Fade>
+}
+
+const Name = ({onSuccess, store, setStore}) => {
+  const copy = COPY.name
   
   function handleKeyPress (e) {
     if (e.key === 'Enter') {
-    onSuccess({password})
+    onSuccess()
     }
   }
 
   return <div className='flex flex-col space-y-4'>
-    <Fade show={show.includes('text1')}>
-    <p className='text-white'>{COPY.login[0]}</p>
-    </Fade>
-  <Fade show={show.includes('text2')}><p className='text-white'>{COPY.login[1]}</p></Fade>
-  <Fade show={show.includes('input')}>
-    <input type='text'  value={password} onChange={e => setPassword(e.target.value)} className='border-b border-dashed border-white bg-black text-black px-4 py-2 focus:bg-monk' onKeyPress={handleKeyPress}/>
-  </Fade>
+    {copy.map((c, i) => <TimedFade showAt={1000 + i * 2500}><p className='text-white'>{Mustache.render(copy[i], store)}</p></TimedFade>)}
+    <TimedFade showAt={1000 + copy.length * 2500}><input type='text'  value={store.name} onChange={e => setStore({...store, name: e.target.value})} className='border-b border-dashed border-white bg-black text-white px-4 py-2' onKeyPress={handleKeyPress}/></TimedFade>
+
+  </div>
+}
+const Login = ({onSuccess, store, setStore}) => {
+  const copy = COPY.login
+  
+  function handleKeyPress (e) {
+    if (e.key === 'Enter') {
+    onSuccess()
+    }
+  }
+
+  return <div className='flex flex-col space-y-4'>
+    {copy.map((c, i) => <TimedFade showAt={1000 + i * 2500}><p className='text-white'>{Mustache.render(copy[i], store)}</p></TimedFade>)}
+    <TimedFade showAt={1000 + copy.length * 2500}>
+    <input type='text'  value={store.seeking} onChange={e => setStore({...store, seeking: e.target.value})} className='border-b border-dashed border-white bg-black text-white px-4 py-2' onKeyPress={handleKeyPress}/>
+      </TimedFade>
 
   </div>
 }
 
-const BG_CLASSES = ['bg-black','bg-white', 'bg-green-200','bg-green-400','bg-green-600','bg-green-900','bg-black', 'fractal']
+
+
+const BG_CLASSES = ['bg-black','bg-white', 'bg-black', 'fractal']
 const Map = ({onSuccess}) => {
   const [show, setShow] = useState(false);
   const [text, setText] = useState(0);
   const [ bg, setBg] = useState(0)
+
+  const [copyI, setCopyI] = useState(0) 
   
-  const copy = COPY.map
+  const copy = COPY.map[copyI]
   // useTimeout(() => {setText(COPY.intro[0])}, 1000)
 
   function handleClick () {
@@ -211,8 +246,23 @@ const Map = ({onSuccess}) => {
     }, 2000)
 
     if (i >= copy.length) {
+      if (copyI === 0) {
+        setBg(1)
+        setTimeout(() => {
+          setBg(2)
+          setText(0)
+          setCopyI(1)
+          setShow(true)
+          queueNext(1)
+        }, 10000)
+      } else {
+        setBg(3)
+        setTimeout(() => {
+          onSuccess()
+        }, 1000)
+      }
       return
-    }
+    } 
 
     setTimeout(() => {
       setText(i)
@@ -226,9 +276,9 @@ const Map = ({onSuccess}) => {
   }, [])
   const bgClass = BG_CLASSES[bg]
 
-  return <div className={"duration-500 transition-colors h-full w-full flex items-center justify-center p-20 text-white " + bgClass}>
+  return <div className={`duration-${(copyI + 1) * 10000} font-buda transition-colors h-full w-full flex items-center justify-center p-20 text-white ${bgClass}`}>
       <div className='w-full max-w-2xl relative z-20' onClick={handleClick}>
-        <div className='absolute inset-0  flex flex-row items-center justify-center'>
+        <div className='absolute inset-0  flex flex-row items-center justify-center text-xl'>
           <Fade show={show}>{copy[text]}</Fade>
           </div>
           <Tasmania className={'draw-svg stroke-current  ' + (bgClass === 'bg-black' && bg > 0 ? 'text-black' : 'text-white') }/>
@@ -252,16 +302,20 @@ return (
 );
 };
 
-const Story = ({onDone, onTypingDone, startDelay=2000, copy, cta}) => {
+const Button = ({children, onClick}) => (
+  <button className='inline-block mt-10 cursor-pointer border border-monk text-white px-4 py-2 bg-monk hover:bg-white hover:bg-monk' onClick={onClick}>{children}</button>
+)
+
+const Story = ({onDone, store={}, onTypingDone, startDelay=2000, copy, cta}) => {
   return <div>
      <Typist cursor={{show: false}} onTypingDone={() => onTypingDone && onTypingDone()} startDelay={startDelay} avgTypingDelay={40}>
-    {copy.map(c => c === '' ? <br/> : <span><p>{c}</p><Typist.Delay ms={600} /></span>)}
+    {copy.map(c => c === '' ? <br/> : <span><p>{Mustache.render(c, store)}</p><Typist.Delay ms={600} /></span>)}
     <Typist.Delay ms={1000} />
-    {cta ? <button className='inline-block mt-10 cursor-pointer border border-monk px-4 py-2 hover:bg-monk hover:text-white' onClick={onDone}>{cta}</button> : <p></p>}
+    {cta ? <Button onClick={onDone}>{cta}</Button> : <p></p>}
     </Typist>
   </div>
 }
-const Buddha = ({onSuccess}) => {
+const Buddha = ({store, onSuccess}) => {
   const [ show, setShow ] = useState(false)
   const [ step, setStep ] = useState(1)
   const copy = COPY.buddha
@@ -275,8 +329,8 @@ const Buddha = ({onSuccess}) => {
       <img src={buddha2} alt="buddha" className='animate-float' width="400"/>
     </Fade>
     <div className='w-1/2'>
-    { step === 2 &&  <Story copy={copy[0]} cta="Yes…" onDone={() => setStep(3)}/>}
-    { step === 3 &&  <Story copy={copy[1]} cta="Yes, I'm ready" onDone={() => setStep(4)}/>}
+    { step === 2 &&  <Story store={store} copy={copy[0]} cta="Yes…" onDone={() => setStep(3)}/>}
+    { step === 3 &&  <Story store={store} copy={copy[1]} cta="Okay…" onDone={() => setStep(4)}/>}
     { step === 4 &&  <Story copy={copy[2]} cta="Sure" onDone={() => setStep(5)}/>}
     { step === 5 &&  <BlackFade onDone={onSuccess}/>}
     </div>
@@ -316,7 +370,7 @@ const Deli = ({onSuccess}) => {
     </div>
     <div className='w-1/2 relative flex flex-row items-center justify-center'>
     <img src={llama} alt="deli" className='animate-llama transition-all relative duration-10000' width={300} style={{left: step > 1 ? 0: 600}}/> 
-    <img src={deli} alt="deli" className='absolute top-60'/>
+    <img src={deli} alt="deli" className='absolute top-72'/>
     </div>
     </>)
 }
@@ -333,7 +387,7 @@ const KumquatTree = ({onPicked, enabled,style}) => {
     if (vals.length === 5 && vals.every(v => v)){
       onPicked()
     }
-  },[onPicked, clicked])
+  },[clicked])
 
   function handleClicked (i) {
     setClicked({[i]: true, ...clicked})
@@ -354,43 +408,46 @@ const KumquatTrees = ({enabled, onPicked}) => {
 
   useEffect(() => {
     const vals = Object.values(picked)
-    if (vals.length === 5 && vals.every(v => v)){
+    if (vals.length === 5 && vals.every(v => v)) {
       onPicked()
     }
-  },[onPicked, picked])
+  },[picked])
 
   function handlePicked (i) {
     setPicked({[i]: true, ...picked})
   }
   return <>
     <KumquatTree onPicked={() => handlePicked(0)} enabled={enabled} style={{top: 150, left: 50 }}/>
-  <KumquatTree  onPicked={() => handlePicked(1)} enabled={enabled} style={{top: 50, left: 300 }}/>
-  <KumquatTree  onPicked={() => handlePicked(2)} enabled={enabled} style={{top: 100, right: 200 }}/>
-  <KumquatTree  onPicked={() => handlePicked(3)} enabled={enabled} style={{bottom: 300, right: 300 }}/>
-  <KumquatTree  onPicked={() => handlePicked(4)} enabled={enabled} style={{bottom: 300, left: 300 }}/>
+    <KumquatTree  onPicked={() => handlePicked(1)} enabled={enabled} style={{top: 50, left: 300 }}/>
+    <KumquatTree  onPicked={() => handlePicked(2)} enabled={enabled} style={{top: 100, right: 200 }}/>
+    <KumquatTree  onPicked={() => handlePicked(3)} enabled={enabled} style={{bottom: 300, right: 300 }}/>
+    <KumquatTree  onPicked={() => handlePicked(4)} enabled={enabled} style={{bottom: 300, left: 300 }}/>
   </>
 }
 
 const Game = ({onSuccess}) => {
   const [step, setStep] = useState(0)
-  const [ error, setError] = useState()
+  const [ message, setMessage] = useState()
   const canPlay = step > 2
-  return <div className='overflow-hidden max-h-full'>
+  return <div>
   {canPlay && <ToeMouse/>}
   { step === 0 && <BlackFade onDone={() =>  setStep(1)} from/>}
+  { step === 5 && <BlackFade onDone={onSuccess}/>}
+
   <div className='flex flex-row space-y-4'>
   { step === 0 &&  <div class='w-96 mt-10'/>}
   { step === 1 &&  <div class='w-96 mt-10'>
     <Story copy={COPY.game_1} cta="Okay" onDone={() => setStep(2)}/>
   </div>}
-  { step === 2 &&  <div className='w-96 mt-10 '> <div className='grid grid-cols-2 text-center'>
-    <img src={mouse} alt='toe' className='h-24' onClick={() => setStep(3)}/>
-    <img src={spoon} alt='spoon' className='h-24' onClick={() => setError('That spoon is far to small to pick a kumquat with!')}/>
-    <img src={sunglasses} alt='glasses' className='h-24' onClick={() => setError('Sunglasses my look good on a wig, but they are no way to pick a kumquat!')}/>
-    <img src={sunglasses} alt='glasses' className='h-24' onClick={() => setError('Sunglasses my look good on a wig, but they are no way to pick a kumquat!')}/>
+  { step === 2 &&  <div className='w-96 mt-10 '> <div className='grid grid-cols-2 gap-10'>
+    <img src={spoon} alt='spoon' className='h-24' onClick={() => setMessage('No.... that spoon is far to small to pick a kumquat with!')}/>
+    <img src={sunglasses} alt='glasses' className='h-24' onClick={() => setMessage('Sunglasses might look good on a wig, but they are no way to pick a kumquat!')}/>
+    <img src={hand} alt='hand' className='w-24' onClick={() => setMessage('Hmmm, that looks like fun... but maybe for later in the evening?')}/>
+    <img src={mouse} alt='toe' className='h-24' onClick={() => setMessage('Ahh, good idea! I toetally support using your feet.')}/>
 
     </div>
-    {error && <p className='mx-10 mt-10'>{error}</p>}
+    {message && <p className='mx-10 mt-10'>{message}</p>}
+     {message && message.includes('feet') && <Button onClick={() => setStep(3)}>Start picking</Button>}
   </div>}
   { step === 3 &&  <div className='w-96 mt-10'>
     <Story startDelay={0} copy={COPY.game_2}/>
@@ -398,20 +455,10 @@ const Game = ({onSuccess}) => {
   { step === 4 &&  <div className='w-96 mt-10'>
     <Story startDelay={0} copy={COPY.game_3} onTypingDone={() => setStep(5)}/>
   </div>}
-  { step === 5 && <BlackFade onDone={onSuccess}/>}
-    <img src={llama} alt='llama' width={200} /> 
+    <img src={llama} alt='llama' width={200} className='animate-llama' /> 
   </div>
     <KumquatTrees enabled={canPlay} onPicked={() => setStep(4)}/>
   </div>
-}
-
-const Hover  = ({className='', setHover, value, children}) => {
-  return (
-    <div className={className + ' cursor-pointer'}
-    onMouseEnter={() => setHover(value)}
-    onMouseLeave={() => setHover(null)}>
-      {children}
-    </div>)
 }
 
 const BlackFade = ({duration= 2000, onDone, from=false}) => {
@@ -531,15 +578,13 @@ return (<div className={`${className} h-full w-full font-buda text-xl flex items
 
 }
 function App() {
-  const [store, setStore] = useState()
-  const [page, setPage ] = useState('login')
+  const [store, setStore] = useState({})
+  const [page, setPage ] = useState('map')
   return (
     <>
-      { page === 'login' && <Screen><Login setStore={setStore} onSuccess={({password}) => {
-        setStore({password, ...store})
-        setPage('buddha')
-        }}/></Screen>}
-      { page === 'buddha' && <Screen className='bg-white text-black'><Buddha onSuccess={() => setPage('deli')}/></Screen>}
+      { page === 'name' && <Screen><Name setStore={setStore} store={store} onSuccess={() => setPage('seek')}/></Screen>}
+      { page === 'seek' && <Screen><Login setStore={setStore} store={store} onSuccess={() => setPage('buddha')}/></Screen>}
+      { page === 'buddha' && <Screen className='bg-white text-black'><Buddha store={store} onSuccess={() => setPage('deli')}/></Screen>}
       { page === 'deli' && <Screen className='bg-white text-black'><Deli onSuccess={() => setPage('game')}/></Screen>}
       { page === 'game' && <Screen className='bg-white text-black'><Game onSuccess={() => setPage('premap')}/></Screen>}
       { page === 'premap' && <Screen className='bg-white text-black'><Premap onSuccess={() => setPage('map')}/></Screen>}
