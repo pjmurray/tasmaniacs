@@ -42,60 +42,51 @@ import Typist from 'react-typist';
 const COPY = {
   name: [
     "Our journey has just begun.",
-    "Let us wander these lands together.",
-    "By what name do you go by?"
+    "Let us explore this world together.",
+    "Fellow wanderer, by what name do you go by?"
   ],
   login: [
     "Welcome {{name}},",
-    "I am here to guide you.",
-    "To show you a path to set yourself free.",
-    "Unfortunately to find ourselves,",
-    "Sometimes we must first get lost.",
-    "What is it that you seek, my child?",
+    "I see you have come very far.",
+    "You are so close - yet still you are searching.",
+    "What is it that you seek?",
   ],
   buddha: [
     [
       "My young disciple. Welcome.",
-      "I've been waiting many years for you.",
+      "We've been expecting you.",
+      "Watching you grow.",
       "",
-      "You are weary, and have come far.",
-      "These times have been tough and unfair.",
-      "I can see that you're hurting.",
+      "Your mind is strong.",
+      "Your heart is pure.",
+      "Your spirit is free.",
       "",
-      "But it's okay.",
-      "For I am here to help.",
-      "I am here to set you free.",
+      "You are ready.",
     ],
     [ 
-      "You see, we are all seeking. Seeking something.",
-      "Whether it is inner peace.",
+      "Follow me to a place.",
+      "Where anything can be.",
+      "A place of endless possibility.",
+      "",
+      "Whether it is inner peace,",
       "Connection with the divine.",
       "Or {{seeking}}.",
-      "We are all seeking, together.",
       "",
-      "However…",
-      '',
-      "I have met many who seek,",
-      "but few who have found.",
-      '',
-      "Many who have wanted,",
-      "but few who have needed.",
-      '',
-      "Many who have taken,",
-      "but few who have given.",
+      "All that you seek, can be found.",
+      "",
+      "The opportunity awaits.",
     ],
    [
-    "Before I show you the path forward,",
-    "You must surrender yourself to service.",
-    'In order to receive, you must first learn to give.',
+    "But before I show you the way,",
+    "You must first surrender yourself to service.",
     '',
     'I have a good friend, the Deli Llama.',
-    'He needs your help.',
+    'Who needs your help.',
     '',
     'This season has been kind to him.',
     'He has been met with abundance.',
-    'But he is old and frail.',
-    'He is unable to reap the benefits,',
+    'But he is tired and weary.',
+    'Unable to reap the benefits',
     'of the seeds he once sowed.',
     '',
     'Will you help him?'
@@ -114,7 +105,7 @@ const COPY = {
       "I could do with a set of hands round here.",
       "These hooves only get me so far.",
       '',
-      "Ya see I've had a bloody ripper of a summer…",
+      "Ya see I've had a bloody ripper of a season…",
       "Heaps of fruit practically falling off me trees.",
       '',
       "So many coconuts! And plenty of mangos!",
@@ -124,7 +115,7 @@ const COPY = {
       "But I'll tell ya mate, I have got one problem.",
       "There's this one fruit that's been giving me a bit of bother.",
       "",
-      "Tiny little bastards...",
+      "Tiny little bastards…",
       "Little citrus fuckers…",
       "They've been taking me ages to pick!",
       "",
@@ -142,7 +133,7 @@ const COPY = {
     [
     'Welcome to the farm!',
     'See what I mean!?',
-    'More Kumquats than I know to do with.',
+    'More Kumquats than I know what to do with.',
     "",
     'I really need your help here mate!',
     ],
@@ -171,7 +162,7 @@ const COPY = {
     "Good on ya mate!",
   ],
   premap: [
-      'Thank you for helping my good friend!',
+      'Thank you {{name}} for helping my good friend!',
       'You are a noble person and a fine Kumqaut picker.',
       '',
       "You have proven you are ready.",
@@ -391,8 +382,8 @@ const Deli = ({onSuccess}) => {
   }
   return (
     <>
-    { step === 1 && <BlackFade onDone={() => setStep(2)} from/>}
-    { step === 6 && <BlackFade onDone={onSuccess}/>}
+    { step === 1 && <BlackFade duration={4000} onDone={() => setStep(2)} from/>}
+    { step === 6 && <BlackFade duration={4000} onDone={onSuccess}/>}
     <div className='w-1/2'>
       {step === 2 && <Story copy={copy[0]} startDelay={10000} onDone={next} cta="I've actually come to help."/>}
       { step === 3 && <Story copy={copy[1]} onDone={next} cta="Sounds it…"/> }
@@ -461,11 +452,21 @@ const KumquatTrees = ({enabled, onPicked}) => {
 const Game = ({onSuccess}) => {
   const [step, setStep] = useState(0)
   const [ message, setMessage] = useState()
+  const [ shake, setShake] = useState()
   const canPlay = step > 3;
   const copy = COPY.game;
   function next() {
     setStep(step + 1)
   }
+  useEffect(() => {
+    if (message && !message.includes('feet')) {
+      setShake(true)
+      setTimeout(() => {
+        setShake(false)
+      }, 1000)
+    }
+    
+  }, [message])
   return <div>
   {canPlay && <ToeMouse/>}
   { step === 0 && <BlackFade duration={4000} onDone={() =>  setStep(1)} from/>}
@@ -495,7 +496,7 @@ const Game = ({onSuccess}) => {
   { step === 5 &&  <div className='w-96 mt-10'>
     <Story startDelay={0} copy={COPY.game_end} onTypingDone={next}/>
   </div>}
-    <img src={llama} alt='llama' width={200} className='animate-llama' /> 
+    <img src={llama} alt='llama' width={200} className={shake ? 'animate-shake' : 'animate-llama'} /> 
   </div>
   { step === 3 && <div className='w-96 mx-auto relative'>
     <div class='absolute pt-2'>
@@ -514,7 +515,7 @@ const BlackFade = ({duration= 2000, onDone, from=false}) => {
     setBlack(!from)
   }, [from])
 
-  useTimeout(() => {onDone?.()}, 2000)
+  useTimeout(() => {onDone?.()}, duration)
   return <div className={`absolute z-50 inset-0 transition-colors duration-${duration} ${(black ? 'bg-black' : 'bg-transparent')}`}/>
 }
 
@@ -692,7 +693,7 @@ const submitStore = (store) => {
 function App() {
   const [store, setStore] = useState({})
   const [page, setPage ] = useState(window.localStorage.getItem('is_tasmaniac') ? 'details' : 'name')
-  // const [page, setPage ] = useState('deli')
+  // const [page, setPage ] = useState('buddha')
   function handleReset () {
     setPage('name')
     window.localStorage.removeItem('is_tasmaniac')
