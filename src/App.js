@@ -104,7 +104,6 @@ const COPY = {
     "Welcome child, to my Deli!",
     "Your offer of help is very kind.",
     '',
-    '',
     "This summer has been good to me,",
     "and my farm has bore many fruits.",
     "But I dont have the means to harvest.",
@@ -318,7 +317,7 @@ const Buddha = ({store, onSuccess}) => {
     { step === 2 &&  <Story store={store} copy={copy[0]} cta="Yes…" onDone={() => setStep(3)}/>}
     { step === 3 &&  <Story store={store} copy={copy[1]} cta="Okay…" onDone={() => setStep(4)}/>}
     { step === 4 &&  <Story copy={copy[2]} cta="Sure" onDone={() => setStep(5)}/>}
-    { step === 5 &&  <BlackFade onDone={onSuccess}/>}
+    { step === 5 &&  <BlackFade onDone={onSuccess} from={false}/>}
     </div>
     </>)
 }
@@ -369,7 +368,7 @@ const KumquatTree = ({onPicked, enabled,style}) => {
     if (vals.length === 5 && vals.every(v => v)){
       onPicked()
     }
-  },[onPicked, clicked])
+  },[clicked])
 
   function handleClicked (i) {
     setClicked({[i]: true, ...clicked})
@@ -393,7 +392,7 @@ const KumquatTrees = ({enabled, onPicked}) => {
     if (vals.length === 5 && vals.every(v => v)) {
       onPicked()
     }
-  },[onPicked, picked])
+  },[picked])
 
   function handlePicked (i) {
     setPicked({[i]: true, ...picked})
@@ -421,15 +420,13 @@ const Game = ({onSuccess}) => {
   { step === 1 &&  <div class='w-96 mt-10'>
     <Story copy={COPY.game_1} cta="Okay" onDone={() => setStep(2)}/>
   </div>}
-  { step === 2 &&  <div className='w-96 mt-10 '> <div className='grid grid-cols-2 gap-10'>
-    <img src={spoon} alt='spoon' className='h-24' onClick={() => setMessage('No.... that spoon is far to small to pick a kumquat with!')}/>
-    <img src={sunglasses} alt='glasses' className='h-24' onClick={() => setMessage('Sunglasses might look good on a wig, but they are no way to pick a kumquat!')}/>
-    <img src={hand} alt='hand' className='w-24' onClick={() => setMessage('Hmmm, that looks like fun... but maybe for later in the evening?')}/>
-    <img src={mouse} alt='toe' className='h-24' onClick={() => setMessage('Ahh, good idea! I toetally support using your feet.')}/>
+  { step === 2 &&  <div className='w-96 mt-10 mr-10 '> <div className='grid grid-cols-2 gap-y-5'>
+    <img src={spoon} alt='spoon' className='h-24 mx-auto' onClick={() => setMessage('No.... that spoon is far to small to pick a kumquat with!')}/>
+    <img src={sunglasses} alt='glasses' className='h-24 mx-auto' onClick={() => setMessage('Sunglasses might look good on a wig, but they are no way to pick a kumquat!')}/>
+    <img src={hand} alt='hand' className='w-24 mx-auto' onClick={() => setMessage('Hmmm, that looks like fun... but maybe for later in the evening?')}/>
+    <img src={mouse} alt='toe' className='h-24 mx-auto' onClick={() => setMessage('Ahh, good idea! I toetally support using your feet.')}/>
 
     </div>
-    {message && <p className='mx-10 mt-10'>{message}</p>}
-     {message && message.includes('feet') && <Button onClick={() => setStep(3)}>Start picking</Button>}
   </div>}
   { step === 3 &&  <div className='w-96 mt-10'>
     <Story startDelay={0} copy={COPY.game_2}/>
@@ -439,6 +436,13 @@ const Game = ({onSuccess}) => {
   </div>}
     <img src={llama} alt='llama' width={200} className='animate-llama' /> 
   </div>
+  { step === 2 && <div className='w-96 mx-auto relative'>
+    <div class='absolute'>
+    {message && <p className=''>{message}</p>}
+      {message && message.includes('feet') && <Button onClick={() => setStep(3)}>Start picking</Button>}
+      </div>
+      </div>
+}
     <KumquatTrees enabled={canPlay} onPicked={() => setStep(4)}/>
   </div>
 }
