@@ -632,11 +632,11 @@ function App() {
       { page === 'map' && <Map onSuccess={() => setPage('info')}/>}
       { page === 'info' && <Announcement onReset={handleReset}/>}
       <div className='hidden'>
-        <img src={llama}/>
-        <img src={deli}/>
-        <img src={fractal1}/>
-        <img src={fractal2}/>
-        <img src={buddha2}/>
+        <img alt='preload' src={llama}/>
+        <img alt='preload' src={deli}/>
+        <img alt='preload' src={fractal1}/>
+        <img alt='preload' src={fractal2}/>
+        <img alt='preload' src={buddha2}/>
       </div>
     </>
   );
