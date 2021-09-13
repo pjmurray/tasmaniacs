@@ -51,17 +51,15 @@ const COPY = {
   ],
   buddha: [
     [
-      "My young disciple.",
-      "Welcome.",
+      "My young disciple. Welcome.",
       "I've been waiting many years for you.",
       "",
       "You are weary, and have come far.",
       "These times have been tough and unfair.",
       "I can see that your hurting.",
       "",
-      "",
       "But it's okay.",
-      "But I am here to help.",
+      "For I am here to help.",
       "I am here to set you free.",
     ],
     [ 
