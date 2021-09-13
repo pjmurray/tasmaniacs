@@ -582,8 +582,8 @@ function App() {
       { page === 'game' && <Screen className='bg-white text-black'><Game onSuccess={() => setPage('premap')}/></Screen>}
       { page === 'premap' && <Screen className='bg-white text-black'><Premap onSuccess={() => setPage('map')}/></Screen>}
       { page === 'map' && <Map onSuccess={() => setPage('info')}/>}
-      { page === 'info' && <Announcement/>}
-      <form className='hidden' data-netlify="true" name="onboarding"><input type="text" name="name"/><input type="text" name="seeking"/><input type="hidden" name="form-name" value="onboarding" /></form>
+      { page === 'info' && <Announcement onReset={() => setPage('name')}/>}
+      
     </>
   );
 }
