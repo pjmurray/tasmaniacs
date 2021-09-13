@@ -368,6 +368,7 @@ const KumquatTree = ({onPicked, enabled,style}) => {
     if (vals.length === 5 && vals.every(v => v)){
       onPicked()
     }
+  // eslint-disable-next-line
   },[clicked])
 
   function handleClicked (i) {
@@ -392,6 +393,7 @@ const KumquatTrees = ({enabled, onPicked}) => {
     if (vals.length === 5 && vals.every(v => v)) {
       onPicked()
     }
+  // eslint-disable-next-line
   },[picked])
 
   function handlePicked (i) {
