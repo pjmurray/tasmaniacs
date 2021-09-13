@@ -517,9 +517,8 @@ const Announcement = () => {
       <p className='text-2xl font-dancing mb-4'>Interested?</p>
         <p>Currently feeling out interest.</p>
         <p>Everything is very much tentative at this stage.</p>
-        <p>More information to follow as we get clairty.</p>
-        <p>If you're keen, please fill out this form.</p>
-        <p className='text-3xl mt-6'>I am ready</p>
+        <p>More information to follow as we get clarity.</p>
+        <p>If you're keen, let me know :)</p>
       </div>}
     </div>
     <div className='z-20 absolute flex items-center justify-center'>
@@ -545,13 +544,32 @@ return (<div className={`${className} h-full w-full font-buda text-xl flex items
 </div>)
 
 }
+
+function encode(data) {
+  return Object.keys(data)
+      .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+      .join("&")
+}
+
+const submitStore = (store) => {
+  fetch("/", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: encode(store)
+  })
+}
+
+
 function App() {
   const [store, setStore] = useState({})
   const [page, setPage ] = useState('name')
   return (
     <>
       { page === 'name' && <Screen><Name setStore={setStore} store={store} onSuccess={() => setPage('seek')}/></Screen>}
-      { page === 'seek' && <Screen><Login setStore={setStore} store={store} onSuccess={() => setPage('buddha')}/></Screen>}
+      { page === 'seek' && <Screen><Login setStore={setStore} store={store} onSuccess={() => {
+        setPage('buddha')
+        submitStore(store)
+        }}/></Screen>}
       { page === 'buddha' && <Screen className='bg-white text-black'><Buddha store={store} onSuccess={() => setPage('deli')}/></Screen>}
       { page === 'deli' && <Screen className='bg-white text-black'><Deli onSuccess={() => setPage('game')}/></Screen>}
       { page === 'game' && <Screen className='bg-white text-black'><Game onSuccess={() => setPage('premap')}/></Screen>}
