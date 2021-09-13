@@ -527,7 +527,7 @@ const Announcement = ({onReset}) => {
       <div onClick={() => setHover('when')} className='absolute z-50 top-0 right-0 p-20 text-2xl'>When</div>
       <div onClick={() => setHover('theme')} className='absolute z-50 bottom-0 left-0 p-20 text-2xl'>Theme</div>
       <div onClick={() => setHover('sign_up')} className='absolute bottom-0 right-0 p-20 text-2xl'>Interested?</div>
-      <div onClick={() => onReset()} className='absolute bottom-0 left-0 right-0 mx-23 p-10 text-base'>RESET</div>
+      <div onClick={() => onReset()} className='absolute bottom-0 left-0 right-0 mx-23 pb-10 text-base'>RESET</div>
 
       </>
 }
